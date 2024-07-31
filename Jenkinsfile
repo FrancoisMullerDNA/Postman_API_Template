@@ -7,6 +7,7 @@ pipeline {
         POSTMAN_COLLECTION_URL = 'https://api.postman.com/collections/37020964-afef3c34-8d06-4171-89b0-3d0f5fde361b?access_key=PMAT-01J43XWK5HNE5JBDH9E0F6T8N6'
         POSTMAN_ENVIRONMENT_FILE = 'Reqres.postman_environment.json'
         NEWMAN_DATA_SOURCE = '' // Path to data file if provided
+        TEST_SUITE = 'SMOKE'
     }
 
     stages {
@@ -17,11 +18,11 @@ pipeline {
                         // Documentation: This stage verifies the availability of NPM and Newman,
                         // and lists the branches of the git repository for the current branch.
                         echo 'Running Config Test...'
-                        bat '''
-                            call npm install -g newman
-                            call npm install -g newman-reporter-html
-                            call npm install -g newman-reporter-htmlextra
-                        '''
+                        // bat '''
+                        //     call npm install -g newman
+                        //     call npm install -g newman-reporter-html
+                        //     call npm install -g newman-reporter-htmlextra
+                        // '''
 
 
                         // Check if Node.js is available
@@ -105,7 +106,7 @@ pipeline {
                         // Run the Newman tests
                         if (env.NEWMAN_DATA_SOURCE) {
                             bat """
-                                newman run ${env.POSTMAN_COLLECTION_URL} -e ${env.POSTMAN_ENVIRONMENT_FILE} --iteration-data ${env.NEWMAN_DATA_SOURCE} -r cli,html,junit,htmlextra \
+                                newman run ${env.POSTMAN_COLLECTION_URL} -e ${env.POSTMAN_ENVIRONMENT_FILE} --env-var TestSuite=${env.TEST_SUITE} --iteration-data ${env.NEWMAN_DATA_SOURCE} -r cli,html,junit,htmlextra \
                                 --reporter-htmlextra-export ${env.RESULTS_DIR}\\HTML_ExtraResults.html \
                                 --reporter-junit-export ${env.RESULTS_DIR}\\JunitResults.xml \
                                 --reporter-cli-export ${env.RESULTS_DIR}\\CLIResults.txt \
@@ -113,7 +114,7 @@ pipeline {
                             """
                         } else {
                             bat """
-                                newman run ${env.POSTMAN_COLLECTION_URL} -e ${env.POSTMAN_ENVIRONMENT_FILE} -r cli,html,junit,htmlextra \
+                                newman run ${env.POSTMAN_COLLECTION_URL} -e ${env.POSTMAN_ENVIRONMENT_FILE} --env-var TestSuite=${env.TEST_SUITE} -r cli,html,junit,htmlextra \
                                 --reporter-htmlextra-export ${env.RESULTS_DIR}\\HTML_ExtraResults.html \
                                 --reporter-junit-export ${env.RESULTS_DIR}\\JunitResults.xml \
                                 --reporter-cli-export ${env.RESULTS_DIR}\\CLIResults.txt \
