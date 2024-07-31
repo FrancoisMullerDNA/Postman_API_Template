@@ -104,7 +104,7 @@ pipeline {
 
                         // Define the results directory name based on the git branch and build number
                         env.BRANCH_NAME = env.BRANCH_NAME ?: 'default-branch'
-                        env.RESULTS_DIR = "Results\\${env.BRANCH_NAME}\\${env.BUILD_NUMBER}"
+                        env.RESULTS_DIR = "Results\\${env.BRANCH_NAME}\\${env.BUILD_NUMBER}\\${params.TEST_SUITE}"
 
                         // Create the subdirectories within the Results directory
                         bat "mkdir ${env.RESULTS_DIR}"
