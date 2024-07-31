@@ -1,20 +1,26 @@
 pipeline {
     agent any
     environment {
-            // Use the withCredentials block to pull the secret and set it to POSTMAN_PAT_KEY
-            withCredentials([string(credentialsId: 'postman-access-token', variable: 'GITHUB_TOKEN')]) {
-                env.POSTMAN_PAT_KEY = GITHUB_TOKEN
-            }
-
-            SLACK_CHANNEL = '#axept-local-jenkins' // Your Slack channel
-            SLACK_CREDENTIALS = 'slack-token' // The ID of your Slack credentials in Jenkins
-            POSTMAN_COLLECTION_URL = "https://api.postman.com/collections/37020964-afef3c34-8d06-4171-89b0-3d0f5fde361b?access_key=${env.POSTMAN_PAT_KEY}"
-            POSTMAN_ENVIRONMENT_FILE = 'Reqres.postman_environment.json'
-            NEWMAN_DATA_SOURCE = '' // Path to data file if provided
-            TEST_SUITE = 'Smoke'
+        SLACK_CHANNEL = '#axept-local-jenkins' // Your Slack channel
+        SLACK_CREDENTIALS = 'slack-token' // The ID of your Slack credentials in Jenkins
+        POSTMAN_ENVIRONMENT_FILE = 'Reqres.postman_environment.json'
+        NEWMAN_DATA_SOURCE = '' // Path to data file if provided
+        TEST_SUITE = 'Smoke'
     }
 
     stages {
+        stage('Prepare Environment') {
+            steps {
+                script {
+                    // Use the withCredentials block to pull the secret and set it to POSTMAN_PAT_KEY
+                    withCredentials([string(credentialsId: 'postman-access-token', variable: 'GITHUB_TOKEN')]) {
+                        env.POSTMAN_PAT_KEY = GITHUB_TOKEN
+                    }
+                    
+                    env.POSTMAN_COLLECTION_URL = "https://api.postman.com/collections/37020964-afef3c34-8d06-4171-89b0-3d0f5fde361b?access_key=${env.POSTMAN_PAT_KEY}"
+                }
+            }
+        }
         stage('Validation') {
             steps {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
@@ -22,12 +28,6 @@ pipeline {
                         // Documentation: This stage verifies the availability of NPM and Newman,
                         // and lists the branches of the git repository for the current branch.
                         echo 'Running Config Test...'
-                        // bat '''
-                        //     call npm install -g newman
-                        //     call npm install -g newman-reporter-html
-                        //     call npm install -g newman-reporter-htmlextra
-                        // '''
-
 
                         // Check if Node.js is available
                         def nodeVersion = bat(script: 'node --version', returnStatus: true)
@@ -43,8 +43,8 @@ pipeline {
 
                         // Check if newman is available
                         def newmanVersion = bat(script: 'newman --version', returnStatus: true)
-                        if (npmVersion != 0) {
-                            error("newman is not available. Please install newman to proceed.")
+                        if (newmanVersion != 0) {
+                            error("Newman is not available. Please install Newman to proceed.")
                         }
 
                         // List branches for the current git repository
@@ -74,23 +74,23 @@ pipeline {
         stage('Test Setup') {
             steps {
                 script {
-                        echo 'Setting up tests'
+                    echo 'Setting up tests'
 
-                        // Check if the environment file exists before copying
-                        if (!fileExists('C:\\AutomationTools\\Environments\\Reqres.postman_environment.json')) {
-                            error("Environment resource not available. Please provide and try again.")
-                        }
-
-                        // Copy the environment file
-                        bat 'copy C:\\AutomationTools\\Environments\\Reqres.postman_environment.json %WORKSPACE%'
-
-                        // Check if the environment file exists after copying
-                        if (!fileExists('Reqres.postman_environment.json')) {
-                            error("Failed to copy environment resource to workspace.")
-                        }
-
-                        echo 'Environment Collection Successfully copied'
+                    // Check if the environment file exists before copying
+                    if (!fileExists('C:\\AutomationTools\\Environments\\Reqres.postman_environment.json')) {
+                        error("Environment resource not available. Please provide and try again.")
                     }
+
+                    // Copy the environment file
+                    bat 'copy C:\\AutomationTools\\Environments\\Reqres.postman_environment.json %WORKSPACE%'
+
+                    // Check if the environment file exists after copying
+                    if (!fileExists('Reqres.postman_environment.json')) {
+                        error("Failed to copy environment resource to workspace.")
+                    }
+
+                    echo 'Environment Collection Successfully copied'
+                }
             }
         }
         stage('Testing') {
