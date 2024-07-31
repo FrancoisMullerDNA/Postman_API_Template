@@ -8,6 +8,7 @@ pipeline {
         SLACK_CREDENTIALS = 'slack-token' // The ID of your Slack credentials in Jenkins
         POSTMAN_ENVIRONMENT_FILE = 'Reqres.postman_environment.json'
         NEWMAN_DATA_SOURCE = '' // Path to data file if provided
+        TEST_RUN = "${params.TEST_SUITE} Suite Setup"
     }
 
     stages {
@@ -18,7 +19,6 @@ pipeline {
                     withCredentials([string(credentialsId: 'postman-access-token', variable: 'GITHUB_TOKEN')]) {
                         env.POSTMAN_PAT_KEY = GITHUB_TOKEN
                     }
-                    
                     env.POSTMAN_COLLECTION_URL = "https://api.postman.com/collections/37020964-afef3c34-8d06-4171-89b0-3d0f5fde361b?access_key=${env.POSTMAN_PAT_KEY}"
                 }
             }
@@ -30,6 +30,10 @@ pipeline {
                         // Documentation: This stage verifies the availability of NPM and Newman,
                         // and lists the branches of the git repository for the current branch.
                         echo 'Running Config Test...'
+
+                        env.BRANCH_NAME = env.BRANCH_NAME ?: 'default-branch'
+                        env.RESULTS_DIR = "Results\\${env.BRANCH_NAME}\\${env.BUILD_NUMBER}\\${params.TEST_SUITE}"
+
 
                         // Check if Node.js is available
                         def nodeVersion = bat(script: 'node --version', returnStatus: true)
@@ -56,7 +60,7 @@ pipeline {
                 }
             }
         }
-        stage("\n${env.TEST_SUITE} Suite Setup") {
+        stage(${env.TEST_RUN}) {
             steps {
                 script {
                     echo 'Setting up test suite'
