@@ -4,7 +4,7 @@ pipeline {
         // Slack Credentials for Alerting
         SLACK_CHANNEL = '#axept-local-jenkins' // Your Slack channel
         SLACK_CREDENTIALS = 'slack-token' // The ID of your Slack credentials in Jenkins
-        POSTMAN_COLLECTION_URL = 'https://api.postman.com/collections/37020964-afef3c34-8d06-4171-89b0-3d0f5fde361b?access_key=PMAT-01J43XWK5HNE5JBDH9E0F6T8N6'
+        POSTMAN_COLLECTION_URL = 'https://api.postman.com/collections/37020964-afef3c34-8d06-4171-89b0-3d0f5fde361b?access_key=PMAK-66aa247cbe7807000139f4f0-90c04240e46408578f7865b0a9d1d8cc7f'
         POSTMAN_ENVIRONMENT_FILE = 'Reqres.postman_environment.json'
         NEWMAN_DATA_SOURCE = '' // Path to data file if provided
         TEST_SUITE = 'Component'
