@@ -56,7 +56,7 @@ pipeline {
                 }
             }
         }
-        stage("${params.TEST_SUITE} Suite Setup") {
+        stage("\n${env.TEST_SUITE} Suite Setup") {
             steps {
                 script {
                     echo 'Setting up test suite'
