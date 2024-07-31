@@ -3,8 +3,8 @@ pipeline {
     environment {
             // Use the withCredentials block to pull the secret and set it to POSTMAN_PAT_KEY
             withCredentials([string(credentialsId: 'postman-access-token', variable: 'GITHUB_TOKEN')]) {
-            POSTMAN_PAT_KEY = GITHUB_TOKEN
-
+                POSTMAN_PAT_KEY = GITHUB_TOKEN
+            }
 
             SLACK_CHANNEL = '#axept-local-jenkins' // Your Slack channel
             SLACK_CREDENTIALS = 'slack-token' // The ID of your Slack credentials in Jenkins
@@ -12,7 +12,6 @@ pipeline {
             POSTMAN_ENVIRONMENT_FILE = 'Reqres.postman_environment.json'
             NEWMAN_DATA_SOURCE = '' // Path to data file if provided
             TEST_SUITE = 'Smoke'
-        }
     }
 
     stages {
