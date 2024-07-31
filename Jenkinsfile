@@ -17,6 +17,11 @@ pipeline {
                         // Documentation: This stage verifies the availability of NPM and Newman,
                         // and lists the branches of the git repository for the current branch.
                         echo 'Running Config Test...'
+                        bat '''
+                            call npm install -g newman
+                            call npm install -g newman-reporter-htmlextra
+                        '''
+
 
                         // Check if Node.js is available
                         def nodeVersion = bat(script: 'node --version', returnStatus: true)
@@ -48,8 +53,10 @@ pipeline {
                 script {
                     echo 'Setting up test suite'
                     // Add any suite setup commands here
-                    call npm install -g newman
-                    call npm install -g newman-reporter-htmlextra
+                    bat '''
+                        call npm install -g newman
+                        call npm install -g newman-reporter-htmlextra
+                    '''
                 }
             }
         }
