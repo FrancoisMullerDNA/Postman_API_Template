@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'TEST_SUITE', defaultValue: 'Smoke', description: 'Name of the test suite to run')
+        choice(name: 'TEST_SUITE', choices: ['Smoke', 'Component', 'Integration', 'Functional', 'Performance'], description: 'Name of the test suite to run')
     }
     environment {
         SLACK_CHANNEL = '#axept-local-jenkins' // Your Slack channel
