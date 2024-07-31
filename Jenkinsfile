@@ -32,8 +32,11 @@ pipeline {
 
                         env.BRANCH_NAME = env.BRANCH_NAME ?: 'default-branch'
                         env.RESULTS_DIR = "Results\\${env.BRANCH_NAME}\\${env.BUILD_NUMBER}\\${params.TEST_SUITE}"
-                        def testSuite = "${params.TEST_SUIT}" ?: "Smoke"
+
+
+                        def testSuite = (params.TEST_SUITE?.trim()) ? params.TEST_SUITE : 'Smoke'
                         currentBuild.description = "Active Test Suite: ${testSuite}"
+                        echo "${params.TEST_SUITE}"
 
                         // Check if Node.js is available
                         def nodeVersion = bat(script: 'node --version', returnStatus: true)
