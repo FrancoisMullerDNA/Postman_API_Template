@@ -1,14 +1,13 @@
 pipeline {
     agent any
     parameters {
-        choice(name: 'TEST_SUITE', choices: ['Smoke', 'Component', 'Integration', 'Functional', 'Performance'], description: 'Name of the test suite to run')
+        choice(name: 'TEST_SUITE', choices: ['Smoke', 'Component', 'Integration', 'Functional', 'Performance'], description: 'Select the Test Suite to run')
     }
     environment {
         SLACK_CHANNEL = '#axept-local-jenkins' // Your Slack channel
         SLACK_CREDENTIALS = 'slack-token' // The ID of your Slack credentials in Jenkins
         POSTMAN_ENVIRONMENT_FILE = 'Reqres.postman_environment.json'
         NEWMAN_DATA_SOURCE = '' // Path to data file if provided
-        TEST_RUN = "${params.TEST_SUITE} Suite Setup"
     }
 
     stages {
@@ -60,7 +59,7 @@ pipeline {
                 }
             }
         }
-        stage(${env.TEST_RUN}) {
+        stage('Suite Setup') {
             steps {
                 script {
                     echo 'Setting up test suite'
