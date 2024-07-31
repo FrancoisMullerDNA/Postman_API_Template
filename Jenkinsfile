@@ -7,7 +7,7 @@ pipeline {
         POSTMAN_COLLECTION_URL = 'https://api.postman.com/collections/37020964-afef3c34-8d06-4171-89b0-3d0f5fde361b?access_key=PMAT-01J43XWK5HNE5JBDH9E0F6T8N6'
         POSTMAN_ENVIRONMENT_FILE = 'Reqres.postman_environment.json'
         NEWMAN_DATA_SOURCE = '' // Path to data file if provided
-        TEST_SUITE = 'SMOKE'
+        TEST_SUITE = 'Smoke'
     }
 
     stages {
