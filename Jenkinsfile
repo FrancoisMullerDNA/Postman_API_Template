@@ -19,6 +19,7 @@ pipeline {
                         echo 'Running Config Test...'
                         bat '''
                             call npm install -g newman
+                            call npm install -g newman-reporter-html
                             call npm install -g newman-reporter-htmlextra
                         '''
 
@@ -53,10 +54,6 @@ pipeline {
                 script {
                     echo 'Setting up test suite'
                     // Add any suite setup commands here
-                    bat '''
-                        call npm install -g newman
-                        call npm install -g newman-reporter-htmlextra
-                    '''
                 }
             }
         }
@@ -104,23 +101,9 @@ pipeline {
                         // Create the subdirectories within the Results directory
                         bat "mkdir ${env.RESULTS_DIR}"
 
-                        // Run the Newman tests
-                        if (env.NEWMAN_DATA_SOURCE) {
-                            bat """
-                                newman run ${env.POSTMAN_COLLECTION_URL} -e ${env.POSTMAN_ENVIRONMENT_FILE} --iteration-data ${env.NEWMAN_DATA_SOURCE} -r cli,html,junit,html-extra \
-                                --reporter-html-extra-export ${env.RESULTS_DIR}\\HTML_ExtraResults.html \
-                                --reporter-junit-export ${env.RESULTS_DIR}\\JunitResults.xml \
-                                --reporter-cli-export ${env.RESULTS_DIR}\\CLIResults.txt \
-                                --reporter-html-export ${env.RESULTS_DIR}\\HTMLResults.html
-                            """
-                        } else {
-                            bat """
-                                newman run ${env.POSTMAN_COLLECTION_URL} -e ${env.POSTMAN_ENVIRONMENT_FILE} -r cli,html,junit,html-extra \
-                                --reporter-html-extra-export ${env.RESULTS_DIR}\\HTML_ExtraResults.html \
-                                --reporter-junit-export ${env.RESULTS_DIR}\\JunitResults.xml \
-                                --reporter-cli-export ${env.RESULTS_DIR}\\CLIResults.txt \
-                                --reporter-html-export ${env.RESULTS_DIR}\\HTMLResults.html
-                            """
+                        bat """
+                            newman run ${env.POSTMAN_COLLECTION_URL} -e ${env.POSTMAN_ENVIRONMENT_FILE} -r cli,html,junit,htmlextra --reporter-htmlextra-export ${env.RESULTS_DIR}\\HTML_ExtraResults.html --reporter-junit-export ${env.RESULTS_DIR}\\JunitResults.xml --reporter-cli-export ${env.RESULTS_DIR}\\CLIResults.txt --reporter-html-export ${env.RESULTS_DIR}\\HTMLResults.html
+                        """
                         }
 
                         // Store test results in environment variables for later use
