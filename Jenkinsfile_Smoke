@@ -1,15 +1,17 @@
 pipeline {
     agent any
+    parameters {
+        string(name: 'TEST_SUITE', defaultValue: 'Smoke', description: 'Name of the test suite to run')
+    }
     environment {
         SLACK_CHANNEL = '#axept-local-jenkins' // Your Slack channel
         SLACK_CREDENTIALS = 'slack-token' // The ID of your Slack credentials in Jenkins
         POSTMAN_ENVIRONMENT_FILE = 'Reqres.postman_environment.json'
         NEWMAN_DATA_SOURCE = '' // Path to data file if provided
-        TEST_SUITE = 'Smoke'
     }
 
     stages {
-        stage('Prepare Environment') {
+        stage('Preparing Tokens') {
             steps {
                 script {
                     // Use the withCredentials block to pull the secret and set it to POSTMAN_PAT_KEY
@@ -110,7 +112,7 @@ pipeline {
                         // Run the Newman tests
                         if (env.NEWMAN_DATA_SOURCE) {
                             bat """
-                                newman run ${env.POSTMAN_COLLECTION_URL} -e ${env.POSTMAN_ENVIRONMENT_FILE} --env-var TestSuite=${env.TEST_SUITE} --iteration-data ${env.NEWMAN_DATA_SOURCE} -r cli,html,junit,htmlextra \
+                                newman run ${env.POSTMAN_COLLECTION_URL} -e ${env.POSTMAN_ENVIRONMENT_FILE} --env-var TestSuite=${params.TEST_SUITE} --iteration-data ${env.NEWMAN_DATA_SOURCE} -r cli,html,junit,htmlextra \
                                 --reporter-htmlextra-export ${env.RESULTS_DIR}\\HTML_ExtraResults.html \
                                 --reporter-junit-export ${env.RESULTS_DIR}\\JunitResults.xml \
                                 --reporter-cli-export ${env.RESULTS_DIR}\\CLIResults.txt \
@@ -118,7 +120,7 @@ pipeline {
                             """
                         } else {
                             bat """
-                                newman run ${env.POSTMAN_COLLECTION_URL} -e ${env.POSTMAN_ENVIRONMENT_FILE} --env-var TestSuite=${env.TEST_SUITE} -r cli,html,junit,htmlextra \
+                                newman run ${env.POSTMAN_COLLECTION_URL} -e ${env.POSTMAN_ENVIRONMENT_FILE} --env-var TestSuite=${params.TEST_SUITE} -r cli,html,junit,htmlextra \
                                 --reporter-htmlextra-export ${env.RESULTS_DIR}\\HTML_ExtraResults.html \
                                 --reporter-junit-export ${env.RESULTS_DIR}\\JunitResults.xml \
                                 --reporter-cli-export ${env.RESULTS_DIR}\\CLIResults.txt \

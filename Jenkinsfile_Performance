@@ -9,7 +9,7 @@ pipeline {
     }
 
     stages {
-        stage('Prepare Environment') {
+        stage('Preparing Tokens') {
             steps {
                 script {
                     // Use the withCredentials block to pull the secret and set it to POSTMAN_PAT_KEY
