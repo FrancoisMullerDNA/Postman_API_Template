@@ -6,7 +6,7 @@ pipeline {
     environment {
         SLACK_CHANNEL = '#axept-local-jenkins' // Your Slack channel
         SLACK_CREDENTIALS = 'slack-token' // The ID of your Slack credentials in Jenkins
-        POSTMAN_ENVIRONMENT_FILE = 'Reqres.postman_environment.json'
+        POSTMAN_ENVIRONMENT_FILE = 'Dev - Orical.postman_environment.json'
         NEWMAN_DATA_SOURCE = '' // Path to data file if provided
     }
 
@@ -86,7 +86,7 @@ pipeline {
                     echo 'Setting up tests'
 
                     // Check if the environment file exists before copying
-                    if (!fileExists('C:\\AutomationTools\\Environments\\Reqres.postman_environment.json')) {
+                    if (!fileExists('C:\\AutomationTools\\Environments\\Dev - Orical.postman_environment.json')) {
                         error("Environment resource not available. Please provide and try again.")
                     }
 
@@ -94,7 +94,7 @@ pipeline {
                     bat 'copy "C:\\AutomationTools\\Environments\\Dev - Orical.postman_environment.json" %WORKSPACE%'
 
                     // Check if the environment file exists after copying
-                    if (!fileExists('Reqres.postman_environment.json')) {
+                    if (!fileExists('C:\\AutomationTools\\Environments\\Dev - Orical.postman_environment.json')) {
                         error("Failed to copy environment resource to workspace.")
                     }
 
