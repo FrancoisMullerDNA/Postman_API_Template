@@ -18,7 +18,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'postman-access-token', variable: 'GITHUB_TOKEN')]) {
                         env.POSTMAN_PAT_KEY = GITHUB_TOKEN
                     }
-                    env.POSTMAN_COLLECTION_URL = "https://api.postman.com/collections/37020964-afef3c34-8d06-4171-89b0-3d0f5fde361b?access_key=${env.POSTMAN_PAT_KEY}"
+                    env.POSTMAN_COLLECTION_URL = "https://api.postman.com/collections/37020964-bff97c6e-2378-4e6a-ba32-29a17c5f7b19?access_key=${env.POSTMAN_PAT_KEY}"
                 }
             }
         }
@@ -91,7 +91,7 @@ pipeline {
                     }
 
                     // Copy the environment file
-                    bat 'copy C:\\AutomationTools\\Environments\\Reqres.postman_environment.json %WORKSPACE%'
+                    bat 'copy "C:\AutomationTools\Environments\Dev - Orical.postman_environment.json" %WORKSPACE%'
 
                     // Check if the environment file exists after copying
                     if (!fileExists('Reqres.postman_environment.json')) {

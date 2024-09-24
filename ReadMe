@@ -1,0 +1,57 @@
+Pipeline Overview
+This pipeline is configured to run on any available agent and allows the user to select a specific test suite to run. It performs various stages to prepare, execute, and archive test results, as well as send notifications.
+
+Parameters
+TEST_SUITE: Choice parameter to select the test suite to run. Options include Smoke, Component, Integration, Functional, and Performance.
+Environment Variables
+SLACK_CHANNEL: The Slack channel where notifications will be sent.
+SLACK_CREDENTIALS: The ID of your Slack credentials stored in Jenkins.
+POSTMAN_ENVIRONMENT_FILE: The Postman environment file used for the tests.
+NEWMAN_DATA_SOURCE: The path to the data file if provided.
+Stages
+Preparing Tokens
+This stage prepares the necessary tokens for accessing Postman collections.
+
+Uses withCredentials to pull the Postman access token and set it to POSTMAN_PAT_KEY.
+Sets the POSTMAN_COLLECTION_URL with the retrieved token.
+Validation
+This stage performs validation checks to ensure the necessary tools and configurations are available.
+
+Verifies the availability of Node.js, npm, and Newman.
+Lists the branches of the git repository.
+Sets up the results directory based on the branch name and build number.
+Updates the build description with the selected test suite.
+Suite Setup
+This stage sets up the test suite.
+
+Placeholder for any suite setup commands.
+Data Setup
+This stage sets up the data for tests.
+
+Placeholder for any data setup commands.
+Test Setup
+This stage sets up the environment for tests.
+
+Checks if the environment file exists and copies it to the workspace.
+Ensures the environment file is successfully copied.
+Testing
+This stage runs the Newman tests and generates reports.
+
+Creates the results directory.
+Runs Newman tests with or without the data source, depending on the provided parameters.
+Stores test results in environment variables for later use.
+Reporting
+This stage handles report uploads to Confluence and Testmo.
+
+Placeholder for any report uploading commands.
+Archive Reports
+This stage archives the generated reports to Jenkins.
+
+Archives HTML and XML reports to Jenkins artifacts.
+Alerting
+This stage handles Slack notifications.
+
+Placeholder for Slack notification integration commands.
+Post Actions
+success: Sets the build result to 'SUCCESS' upon successful completion of the pipeline.
+failure: Sets the build result to 'FAILURE' if the pipeline fails at any stage.
