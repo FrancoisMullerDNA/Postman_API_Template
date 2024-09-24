@@ -91,7 +91,7 @@ pipeline {
                     }
 
                     // Copy the environment file
-                    bat 'copy "C:\AutomationTools\Environments\Dev - Orical.postman_environment.json" %WORKSPACE%'
+                    bat 'copy "C:\\AutomationTools\\Environments\\Dev - Orical.postman_environment.json" %WORKSPACE%'
 
                     // Check if the environment file exists after copying
                     if (!fileExists('Reqres.postman_environment.json')) {
